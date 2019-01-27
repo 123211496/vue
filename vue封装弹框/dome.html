@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .popUp{width: 250px;height: 200px;background: #ffffff;border: 1px solid}
+        .popUp-header{height: 30px;display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid}
+        .popUp-content{height: 140px;border-bottom: 1px solid;display: flex;justify-content: center;align-items: center}
+        .popUp-footer{height: 30px;display: flex;
+        flex-wrap: wrap;}
+        .btn{height: 28px;width: 50%}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+   <div id="app">
+        <my-popup title="详情" @on-ok="ok" @on-cancel="no"></my-popup>
+        <my-popup>
+            <ul slot="popUp-content">
+                <li v-for="item in list">{{item}}</li>
+            </ul>
+            <div slot="popUp-footer">
+                <span>确定</span>
+                <span>取消</span>
+            </div>
+        </my-popup>
+   </div>
+   <script>
+        /*  封装前 先确定有哪些要需要配置
+        * 设置 title 提醒消息， 
+        * 定制模板
+        *    slot为popUp-content   内容
+        *    slot为popUp-footer   底部
+        * 监控子组件状态变化
+        *  事件名 on-ok   点击确定触发
+        *  事件名 on-cancel   点击取消触发
+        **/
+    Vue.component('my-popup',{
+        props:{
+            title:{
+                type:String,
+                default:'这是标题'
+            }
+        },
+        template:`
+        <div class="popUp">
+                <div class="popUp-header">
+                    <span>{{title}}</span>
+                    <span>x</span>
+                </div>
+                <div class="popUp-content">
+                    <div>
+                        <slot name="popUp-content">内容</slot>
+                    </div>
+                </div>
+                <div class="popUp-footer">
+                    <slot name="popUp-footer">
+                        <button class="btn" @click="okHandle">确定</button>
+                        <button  class="btn" @click="cancelHandel">取消</button>
+                    </slot>
+                </div>
+            </div>
+        `,
+        methods: {
+            okHandle(){
+                this.$emit('on-ok');
+            },
+            cancelHandel(){
+                this.$emit('on-cancel')
+            }
+        },
+    })
+    var list=[ ...'封装dome']
+    new Vue({
+        el:'#app',
+        data:{
+            list:list
+        },
+        methods:{
+            ok(){
+                alert('封装dome:确定')
+            },
+            no(){
+                alert('封装dome:取消')
+            }
+        }
+    })
+    </script>
+</body>
+
+
+</html>
